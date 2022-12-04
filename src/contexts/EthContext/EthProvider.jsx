@@ -15,6 +15,7 @@ function EthProvider({ children }) {
         const accounts = "";
         const networkID = await web3.eth.net.getId();
         const { abi } = artifact;
+        const dSponsorNFTContract = require("../../artifacts/contracts/DSponsorNFT.sol/DSponsorNFT.json");
         let address; let contract;
         try {
           address = "0x8d1137542C2F1a07b59971814E0Db5fF5008099e";
@@ -24,7 +25,7 @@ function EthProvider({ children }) {
         }
         dispatch({
           type: actions.init,
-          data: { artifact, web3, accounts, networkID, contract }
+          data: { artifact, web3, accounts, networkID, contract, dSponsorNFTContract }
         });
       }
     }, []);
