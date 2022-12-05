@@ -8,19 +8,16 @@ import TrendingSection from "../Home/TrendingSection";
 
 export default function MainSection({ className }) {
   const {
-    state: { contract, web3, dSponsorNFTContract},
+    state: { contract, web3, dSponsorNFTContract },
   } = useEth();
 
   const [tab] = useState("explore");
 
   const [marketProducts, setMarketProducts] = useState([]);
 
-
-
   useEffect(() => {
     if (marketProducts.length === 0) {
       const fetchData = async () => {
-
         products.data = [];
         console.log(contract);
         console.log(" before eventNewDSponsor");
@@ -40,12 +37,9 @@ export default function MainSection({ className }) {
         console.log("table des contrats : ");
         console.log(nftContractId);
 
-        
-
         // début boucle
 
         // boule for each nftContractId, récupérer addressDsponNFT
-
 
         console.log(nftContractId[0]);
 
@@ -72,28 +66,43 @@ export default function MainSection({ className }) {
         // });
         // appel du price pour dSponsorNFT Contract
 
-        console.log("avant price c ontractNft");
+        console.log("avant price contractNft");
         console.log(contractNft);
 
         console.log(" before Price");
         const price = await contractNft.methods
           .getMintPriceForCurrency("0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1")
           .call();
-        
+
         // appel du controller pour dSponsorNFT Contract
 
         console.log(" before Controller");
         const controller = await contractNft.methods.getController().call();
-         console.log(controller);
+        console.log(controller);
         console.log(" after Controller");
 
-        products.data.push({id: 0, owner: "long", owner_img: "owner.png", creator_img: "creator.png", eth_price: price.amount, usd_price : "773.69  USD",creator: controller, "whishlisted": true, thumbnil: "marketplace-product-1.jpg",  title: "fugiat labore cillum", isActive: true});
+   
+
+        products.data.push({
+          id: 0,
+          owner: "long",
+          owner_img: "owner.png",
+          creator_img: "creator.png",
+          eth_price: price.amount.substring(0,0).concat("0.").concat(price.amount.substring(0,5)),
+          usd_price: "773.69  USD",
+          creator: controller.substring(0, 5).concat("....").concat(controller.substring(38,43)),
+          whishlisted: true,
+          thumbnil: "marketplace-product-1.jpg",
+          title: "Logo",
+          isActive: true,
+        });
+
+                  
 
 
         // fin de boucle
 
         setMarketProducts(products.data);
-
       };
 
       fetchData();
