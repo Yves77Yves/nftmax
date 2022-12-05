@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
+import products from "../../data/marketplace_data.json";
 import ProductCardStyleTwo from "../Cards/ProductCardStyleTwo";
 import DataIteration from "../Helpers/DataIteration";
-import products from "../../data/marketplace_data.json";
 
-import TrendingSection from "../Home/TrendingSection";
 import useEth from "../../contexts/EthContext/useEth";
+import TrendingSection from "../Home/TrendingSection";
 
 export default function MainSection({ className }) {
   const {
@@ -15,9 +15,13 @@ export default function MainSection({ className }) {
 
   const [marketProducts, setMarketProducts] = useState([]);
 
+
+
   useEffect(() => {
     if (marketProducts.length === 0) {
       const fetchData = async () => {
+
+        products.data = [];
         console.log(contract);
         console.log(" before eventNewDSponsor");
         const eventNewDSponsor = await contract.getPastEvents("NewDSponsor", {
@@ -32,8 +36,16 @@ export default function MainSection({ className }) {
         const nftContractId = eventNewDSponsor.map(
           (Id) => Id.returnValues.nftContract
         );
+
         console.log("table des contrats : ");
         console.log(nftContractId);
+
+        
+
+        // début boucle
+
+        // boule for each nftContractId, récupérer addressDsponNFT
+
 
         console.log(nftContractId[0]);
 
@@ -67,19 +79,23 @@ export default function MainSection({ className }) {
         const price = await contractNft.methods
           .getMintPriceForCurrency("0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1")
           .call();
-        products.data[0].eth_price = price.amount;
-        console.log(price);
-
+        
         // appel du controller pour dSponsorNFT Contract
 
         console.log(" before Controller");
         const controller = await contractNft.methods.getController().call();
-        products.data[0].creator = controller;
-        console.log(controller);
+         console.log(controller);
         console.log(" after Controller");
 
+        products.data.push({id: 0, owner: "long", owner_img: "owner.png", creator_img: "creator.png", eth_price: price.amount, usd_price : "773.69  USD",creator: controller, "whishlisted": true, thumbnil: "marketplace-product-1.jpg",  title: "fugiat labore cillum", isActive: true});
+
+
+        // fin de boucle
+
         setMarketProducts(products.data);
+
       };
+
       fetchData();
     }
     console.log("end if");
