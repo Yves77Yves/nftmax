@@ -42,64 +42,39 @@ export default function MainSection({ className }) {
         // boule for each nftContractId, récupérer addressDsponNFT
 
         console.log(nftContractId[0]);
+        await Promise.all(nftContractId.map(async (value, index) => {
+          console.log(value)
+          console.log(index)
+          const contractNft = new web3.eth.Contract(
+              dSponsorNFTContract.abi,
+              value);
+          const price = await contractNft.methods
+              .getMintPriceForCurrency("0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1")
+              .call();
+          const controller = await contractNft.methods.getController().call();
 
-        console.log("print dSponsorNFTContract");
+          products.data.push({
+            id: index,
+            owner: "long",
+            owner_img: "owner.png",
+            creator_img: "creator.png",
+            eth_price: price.amount.substring(0,0).concat("0.").concat(price.amount.substring(0,5)),
+            usd_price: "773.69  USD",
+            creator: controller.substring(0, 5).concat("....").concat(controller.substring(38,43)),
+            whishlisted: true,
+            thumbnil: "marketplace-product-1.jpg",
+            title: "Logo",
+            isActive: true,
+          });
+        }));
 
-        const addressDsponsorNft = nftContractId[0];
 
-        console.log(addressDsponsorNft);
-
-        // appel dSponsorNFT Contract pour nftContractId
-        const contractNft = new web3.eth.Contract(
-          dSponsorNFTContract.abi,
-          addressDsponsorNft
-        );
-
-        console.log("après contractNft");
-        console.log(contractNft);
-
-        console.log(" before eventMint");
         // console.log( await web3.eth.getBlockNumber);
         // const eventMint = await contractNft.getPastEvents("Mint", {
         //   fromBlock: web3.eth.getBlockNumber - 900,
         //   toBlock: "latest",
         // });
         // appel du price pour dSponsorNFT Contract
-
-        console.log("avant price contractNft");
-        console.log(contractNft);
-
-        console.log(" before Price");
-        const price = await contractNft.methods
-          .getMintPriceForCurrency("0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1")
-          .call();
-
-        // appel du controller pour dSponsorNFT Contract
-
-        console.log(" before Controller");
-        const controller = await contractNft.methods.getController().call();
-        console.log(controller);
-        console.log(" after Controller");
-
-   
-
-        products.data.push({
-          id: 0,
-          owner: "long",
-          owner_img: "owner.png",
-          creator_img: "creator.png",
-          eth_price: price.amount.substring(0,0).concat("0.").concat(price.amount.substring(0,5)),
-          usd_price: "773.69  USD",
-          creator: controller.substring(0, 5).concat("....").concat(controller.substring(38,43)),
-          whishlisted: true,
-          thumbnil: "marketplace-product-1.jpg",
-          title: "Logo",
-          isActive: true,
-        });
-
-                  
-
-
         // fin de boucle
 
         setMarketProducts(products.data);
