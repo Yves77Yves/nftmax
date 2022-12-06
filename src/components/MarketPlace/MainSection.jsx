@@ -22,8 +22,8 @@ export default function MainSection({ className }) {
         console.log(contract);
         console.log(" before eventNewDSponsor");
         const eventNewDSponsor = await contract.getPastEvents("NewDSponsor", {
-          fromBlock: 29454517,
-          toBlock: 29454517 + 1000,
+          fromBlock: 29310000,
+          toBlock: "latest",
         });
         console.log(" after eventNewDSponsor");
         console.log(eventNewDSponsor);
