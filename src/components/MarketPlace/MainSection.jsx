@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
+import products from "../../data/marketplace_data.json";
 import ProductCardStyleTwo from "../Cards/ProductCardStyleTwo";
 import DataIteration from "../Helpers/DataIteration";
-import products from "../../data/marketplace_data.json";
 
-import TrendingSection from "../Home/TrendingSection";
 import useEth from "../../contexts/EthContext/useEth";
+import TrendingSection from "../Home/TrendingSection";
 
 export default function MainSection({ className }) {
   const {
-    state: { contract, web3, dSponsorNFTContract},
+    state: { contract, web3, dSponsorNFTContract },
   } = useEth();
 
   const [tab] = useState("explore");
@@ -18,6 +18,7 @@ export default function MainSection({ className }) {
   useEffect(() => {
     if (marketProducts.length === 0) {
       const fetchData = async () => {
+        products.data = [];
         console.log(contract);
         console.log(" before eventNewDSponsor");
         const eventNewDSponsor = await contract.getPastEvents("NewDSponsor", {
@@ -32,54 +33,53 @@ export default function MainSection({ className }) {
         const nftContractId = eventNewDSponsor.map(
           (Id) => Id.returnValues.nftContract
         );
+
         console.log("table des contrats : ");
         console.log(nftContractId);
 
+        // début boucle
+
+        // boule for each nftContractId, récupérer addressDsponNFT
+
         console.log(nftContractId[0]);
+        await Promise.all(nftContractId.map(async (value, index) => {
+          console.log(value)
+          console.log(index)
+          const contractNft = new web3.eth.Contract(
+              dSponsorNFTContract.abi,
+              value);
+          const price = await contractNft.methods
+              .getMintPriceForCurrency("0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1")
+              .call();
+          const controller = await contractNft.methods.getController().call();
 
-        console.log("print dSponsorNFTContract");
+          products.data.push({
+            id: index,
+            owner: "long",
+            owner_img: "owner.png",
+            creator_img: "creator.png",
+            eth_price: price.amount.substring(0,0).concat("0.").concat(price.amount.substring(0,5)),
+            usd_price: "773.69  USD",
+            creator: controller.substring(0, 5).concat("....").concat(controller.substring(38,43)),
+            whishlisted: true,
+            thumbnil: "marketplace-product-1.jpg",
+            title: "Logo",
+            isActive: true,
+          });
+        }));
 
-        const addressDsponsorNft = nftContractId[0];
 
-        console.log(addressDsponsorNft);
-
-        // appel dSponsorNFT Contract pour nftContractId
-        const contractNft = new web3.eth.Contract(
-          dSponsorNFTContract.abi,
-          addressDsponsorNft
-        );
-
-        console.log("après contractNft");
-        console.log(contractNft);
-
-        console.log(" before eventMint");
         // console.log( await web3.eth.getBlockNumber);
         // const eventMint = await contractNft.getPastEvents("Mint", {
         //   fromBlock: web3.eth.getBlockNumber - 900,
         //   toBlock: "latest",
         // });
         // appel du price pour dSponsorNFT Contract
-
-        console.log("avant price c ontractNft");
-        console.log(contractNft);
-
-        console.log(" before Price");
-        const price = await contractNft.methods
-          .getMintPriceForCurrency("0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1")
-          .call();
-        products.data[0].eth_price = price.amount;
-        console.log(price);
-
-        // appel du controller pour dSponsorNFT Contract
-
-        console.log(" before Controller");
-        const controller = await contractNft.methods.getController().call();
-        products.data[0].creator = controller;
-        console.log(controller);
-        console.log(" after Controller");
+        // fin de boucle
 
         setMarketProducts(products.data);
       };
+
       fetchData();
     }
     console.log("end if");
