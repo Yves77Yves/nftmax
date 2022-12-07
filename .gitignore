@@ -3,3 +3,16 @@ node_modules
 .vscode
 .vercel
 .env
+#solidity
+solidity/node_modules
+solidity/.env
+solidity/coverage
+solidity/coverage.json
+solidity/typechain
+solidity/typechain-types
+
+#Hardhat files
+solidity/cache
+solidity/artifacts
+
+solidity/local-pk.txt
