@@ -43,8 +43,6 @@ export default function MainSection({ className }) {
 
         console.log(nftContractId[0]);
         await Promise.all(nftContractId.map(async (value, index) => {
-          console.log(value)
-          console.log(index)
           const contractNft = new web3.eth.Contract(
               dSponsorNFTContract.abi,
               value);
@@ -65,6 +63,7 @@ export default function MainSection({ className }) {
             thumbnil: "marketplace-product-1.jpg",
             title: "Logo",
             isActive: true,
+            contractOwner: value
           });
         }));
 
