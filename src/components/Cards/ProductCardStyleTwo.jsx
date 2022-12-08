@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import useEth from "../../contexts/EthContext/useEth";
 import localImgLoad from "../../lib/localImgLoad";
 import Icons from "../Helpers/Icons";
-import useEth from "../../contexts/EthContext/useEth";
 
 export default function ProductCardStyleTwo({
   className,
@@ -29,7 +29,7 @@ export default function ProductCardStyleTwo({
     const contractNft = new web3.eth.Contract(
         dSponsorNFTContract.abi,
         datas.contractOwner);
-    await contractNft.methods.payAndMint(currency, accounts[0]).send({ from: accounts[0], value: event.target.value });
+    await contractNft.methods.payAndMint(currency, accounts[0], "").send({ from: accounts[0], value: event.target.value });
   }
   return (
     <div
@@ -247,7 +247,7 @@ export default function ProductCardStyleTwo({
               </div>
               <div>
                 <p className="font-bold text-xl tracking-wide line-clamp-1 text-dark-gray">
-                  {datas.eth_price}
+                  {datas.eth_price / 10**18}
                 </p>
                 <p className="text-sm text-lighter-gray">
                   ( {datas.usd_price})

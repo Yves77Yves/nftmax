@@ -11,8 +11,8 @@ function EthProvider({ children }) {
     async artifact => {
       if (artifact) {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-        // const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        const accounts = "";
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        // const accounts = "";
         const networkID = await web3.eth.net.getId();
         const { abi } = artifact;
         const dSponsorNFTContract = require("../../artifacts/contracts/DSponsorNFT.sol/DSponsorNFT.json");
