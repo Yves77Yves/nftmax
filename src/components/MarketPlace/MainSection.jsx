@@ -34,6 +34,7 @@ export default function MainSection({ className }) {
           (Id) => Id.returnValues.nftContract
         );
 
+
         console.log("table des contrats : ");
         console.log(nftContractId);
 
@@ -42,29 +43,32 @@ export default function MainSection({ className }) {
         // boule for each nftContractId, récupérer addressDsponNFT
 
         console.log(nftContractId[0]);
-        await Promise.all(nftContractId.map(async (value, index) => {
-          console.log(value)
-          console.log(index)
+        await Promise.all(nftContractId.map(async (address, index) => {
           const contractNft = new web3.eth.Contract(
               dSponsorNFTContract.abi,
-              value);
+              address);
           const price = await contractNft.methods
               .getMintPriceForCurrency("0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1")
               .call();
           const controller = await contractNft.methods.getController().call();
+          const totalSupply = await contractNft.methods.totalSupply().call();
+          const maxSupply = await contractNft.methods.getMaxSupply().call();
+          const availableSupply =  maxSupply - totalSupply;
+
 
           products.data.push({
             id: index,
             owner: "long",
             owner_img: "owner.png",
             creator_img: "creator.png",
-            eth_price: price.amount.substring(0,0).concat("0.").concat(price.amount.substring(0,5)),
-            usd_price: "773.69  USD",
+            eth_price: parseInt(price.amount, 10),
+            usd_price: availableSupply,
             creator: controller.substring(0, 5).concat("....").concat(controller.substring(38,43)),
             whishlisted: true,
             thumbnil: "marketplace-product-1.jpg",
             title: "Logo",
             isActive: true,
+            contractOwner: address
           });
         }));
 

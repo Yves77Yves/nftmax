@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import useEth from "../../contexts/EthContext/useEth";
 import localImgLoad from "../../lib/localImgLoad";
 import Icons from "../Helpers/Icons";
 
@@ -9,8 +10,12 @@ export default function ProductCardStyleTwo({
   datas,
   hidden = false,
 }) {
+  const {
+    state: { web3, dSponsorNFTContract, accounts},
+  } = useEth();
   const [addFavorite, setValue] = useState(datas.whishlisted);
   const [options, setOption] = useState(false);
+  const currency = "0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1";
   const favoriteHandler = () => {
     if (!addFavorite) {
       setValue(true);
@@ -20,6 +25,12 @@ export default function ProductCardStyleTwo({
       toast.warn("Remove to Favorite List");
     }
   };
+  const purchase = async (event) => {
+    const contractNft = new web3.eth.Contract(
+        dSponsorNFTContract.abi,
+        datas.contractOwner);
+    await contractNft.methods.payAndMint(currency, accounts[0], "").send({ from: accounts[0], value: event.target.value });
+  }
   return (
     <div
       className={`card-style-two w-full h-[426px] p-[20px] bg-white rounded-2xl section-shadow ${
@@ -236,7 +247,7 @@ export default function ProductCardStyleTwo({
               </div>
               <div>
                 <p className="font-bold text-xl tracking-wide line-clamp-1 text-dark-gray">
-                  {datas.eth_price}
+                  {datas.eth_price / 10**18}
                 </p>
                 <p className="text-sm text-lighter-gray">
                   ( {datas.usd_price})
@@ -245,6 +256,8 @@ export default function ProductCardStyleTwo({
             </div>
             <div>
               <button
+                onClick={purchase}
+                value={datas.eth_price}
                 type="button"
                 className="px-4 py-2.5 text-white text-sm bg-pink rounded-full tracking-wide"
               >
