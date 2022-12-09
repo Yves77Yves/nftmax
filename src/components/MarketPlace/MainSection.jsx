@@ -22,7 +22,7 @@ export default function MainSection({ className }) {
         console.log(contract);
         console.log(" before eventNewDSponsor");
         const eventNewDSponsor = await contract.getPastEvents("NewDSponsor", {
-          fromBlock: 29310000,
+          fromBlock: 29454517, // 29310000,
           toBlock: "latest",
         });
         console.log(" after eventNewDSponsor");
@@ -51,9 +51,12 @@ export default function MainSection({ className }) {
               .getMintPriceForCurrency("0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1")
               .call();
           const controller = await contractNft.methods.getController().call();
+
           const totalSupply = await contractNft.methods.totalSupply().call();
           const maxSupply = await contractNft.methods.getMaxSupply().call();
           const availableSupply =  maxSupply - totalSupply;
+
+          const name = await contractNft.methods.name().call();
 
 
           products.data.push({
@@ -66,20 +69,12 @@ export default function MainSection({ className }) {
             creator: controller.substring(0, 5).concat("....").concat(controller.substring(38,43)),
             whishlisted: true,
             thumbnil: "marketplace-product-1.jpg",
-            title: "Logo",
+            title: name,
             isActive: true,
             contractOwner: address
           });
         }));
 
-
-        // console.log( await web3.eth.getBlockNumber);
-        // const eventMint = await contractNft.getPastEvents("Mint", {
-        //   fromBlock: web3.eth.getBlockNumber - 900,
-        //   toBlock: "latest",
-        // });
-        // appel du price pour dSponsorNFT Contract
-        // fin de boucle
 
         setMarketProducts(products.data);
       };
@@ -110,11 +105,11 @@ export default function MainSection({ className }) {
         <div className="filter-navigate-area lg:flex justify-between mb-8 items-center">
           <div className="tab-item lg:mb-0 mb-5">
             <div className="md:flex md:space-x-8 space-x-2">
-              <p className="text-base text-thin-light-gray tracking-wide mb-7">
+              <h1 className="text-center text-26 font-bold text-dark-gray">
                 Avec d>sponsor, promouvoir son activité se fait en seulement
-                quelques clics. Achetez un espace de visiblilé, informez votre
-                publcité et c’est terminé !
-              </p>
+                quelques clics. Achetez un espace de visibililé, informez votre
+                publicité et c’est terminé !
+              </h1>
             </div>
           </div>
         </div>

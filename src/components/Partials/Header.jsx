@@ -19,7 +19,7 @@ export default function Header({  sidebarHandler }) {
   const [moneyPopup, setPopup] = useToggle(false);
 
   const {
-    state: {  accounts,  },
+    state: {  accounts  },
   } = useEth();
   
 
