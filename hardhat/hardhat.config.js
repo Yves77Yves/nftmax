@@ -19,7 +19,7 @@ module.exports = {
     }
   },
 
-    paths: {artifacts : "../nftmax/src/artifacts" },
+    paths: {artifacts : "./artifacts" },
   networks: {
     hardhat: {
       chainId: 1337

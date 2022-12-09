@@ -303,7 +303,7 @@ describe("DSponsor", function () {
       );
     });
 
-    it.only("gets and sets period", async function () {
+    it("gets and sets period", async function () {
       const { period, DSponsorContract } = await loadFixture(
         initFixture
       );
@@ -365,7 +365,7 @@ describe("DSponsor", function () {
     });
 
     
-    it.only("Protects period setting by role", async function () {
+    it("Protects period setting by role", async function () {
       const {
         sponsee,
         user1,
@@ -381,7 +381,7 @@ describe("DSponsor", function () {
       await expect(
         DSponsorContract.connect(sponsee).setValidityPeriod(period[0] + 1000, period[1] + 1000)
       )        .to.emit(DSponsorContract, "ValidityPeriodUpdate")
-      .withArgs(period[0] + 1000, period[1] + 1001);
+      .withArgs(period[0] + 1000, period[1] + 1000);
 
 
     });
